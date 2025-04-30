@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, Image} from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity,Image,Button} from 'react-native'
 import React from 'react'
-import Logo from '../assets/profil.png'
 import{Link} from 'expo-router'
+import Icon from 'react-native-vector-icons/Feather';
 
 const Home = () => {
   return (
@@ -13,19 +13,27 @@ const Home = () => {
   </View>
 
   <View style={styles.box}>
-    <Text style={{ fontWeight: 'bold', fontFamily: 'monospace', color: 'white' }}>
-      + Nouvelle détection
-    </Text>
+    <Link href="/NouvelleDetection" asChild>
+        <Button title="+ Nouvelle détection " color='#006400'/>
+    </Link>
   </View>
 
   <View style={styles.box}>
-    <Text style={{ fontWeight: 'bold', fontFamily: 'monospace', color: 'white' }}>
-      Historique des analyses
-    </Text>
+  <Link href="/Historique" asChild>
+        <Button title="Historique des analyses " color='#006400'/>
+    </Link>
   </View>
 
-  <Link href="/profil"  style={styles.icons}><Image source={Logo} style={styles.img}/> </Link>
+  
+
+  <View style={styles.bottomBar}>
+               <TouchableOpacity>
+                <Icon name="user" size={25} color="black" />
+                </TouchableOpacity>
+         </View>
 </View>
+
+
 
   )
 }
@@ -54,18 +62,11 @@ const styles = StyleSheet.create({
       marginBottom: 10,
     },
     box: {
-      width: '80%',
-      padding: 20,
-      backgroundColor: '#006400',
+     
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 12,
       marginVertical: 10,
-      shadowColor: '#004d00',
-      shadowOffset: { width: 2, height: 2 },
-      shadowOpacity: 0.4,
-      shadowRadius: 4,
-      elevation: 5, 
+      elevation: 5
     },
     link: {
       marginTop: 40,
@@ -84,6 +85,20 @@ const styles = StyleSheet.create({
     },
     icons:{
         marginTop: 60
-    }
+    },
+    bottomBar: {
+        backgroundColor: '#f5f5dc',
+        width: '90%',
+        borderRadius: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: '',
+        paddingVertical: 10,
+        marginTop: 20
+        
+      },
+      icon: {
+        fontSize: 24,
+      }
   });
   
