@@ -61,7 +61,7 @@ const NouvelleDetection = () => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.logo}>LOGO</Text>
+        <Text style={styles.logo}>Planty</Text>
         <Text style={styles.title}>Nouvelle Détection</Text>
         
         <TouchableOpacity style={styles.chooseImageButton} onPress={choisirImage}>
@@ -109,20 +109,20 @@ const styles = StyleSheet.create({
   logo: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 30,
   },
   title: {
-    fontSize: 35,
+    fontSize: 25,
     fontWeight: 'bold',
     fontStyle: 'italic',
     color: '#000',
     marginTop:20,
   },
   chooseImageButton: {
-    backgroundColor: '#05822e',
-    paddingVertical: 20,
+    backgroundColor: '#006400',
+    paddingVertical: 10,
     paddingHorizontal: 30,
-    borderRadius: 20,
+    borderRadius: 5,
     marginTop:20,
   },
   chooseImageText: {
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5dc',
     width: '80%',
     height: 150,
-    borderRadius: 40,
+    borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop:20,
@@ -145,9 +145,9 @@ const styles = StyleSheet.create({
   },
   analyzeButton: {
     backgroundColor: '#f4b700',
-    paddingVertical: 20,
-    paddingHorizontal: 50,
-    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 10,
   },
   analyzeButtonText: {
     color: '#fff',
