@@ -71,20 +71,11 @@ const NouvelleDetection = () => {
         <View style={styles.imagePlaceholder}>
            {contenuImage}
         </View>
-
-        <TouchableOpacity style={styles.analyzeButton}>
+         <Link href="/loading" asChild>
+        <TouchableOpacity   style={styles.analyzeButton}>
           <Text style={styles.analyzeButtonText}>Analyser</Text>
         </TouchableOpacity>
-        <View style={styles.bottomBar}>
-          <Link href="/" asChild>
-             <TouchableOpacity>
-               <Icon name="home" size={25} color="black" />
-            </TouchableOpacity>
-          </Link>
-             <TouchableOpacity>
-              <Icon name="user" size={25} color="black" />
-              </TouchableOpacity>
-       </View>
+        </Link>
       </View>
 
       
@@ -97,14 +88,14 @@ const NouvelleDetection = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#066625',
+    backgroundColor: 'hsla(132, 94.90%, 30.80%, 0.75)',
     paddingVertical: 10,
     alignItems: 'center',
   justifyContent: 'center',
   },
   card: {
     flex: 1,
-    backgroundColor: '#3fb056',
+    backgroundColor: '#7bd198',
     width: '90%',
     height: '90%',
     borderRadius: 20,
@@ -125,14 +116,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontStyle: 'italic',
     color: '#000',
-    marginTop:'auto',
+    marginTop:20,
   },
   chooseImageButton: {
     backgroundColor: '#05822e',
     paddingVertical: 20,
     paddingHorizontal: 30,
     borderRadius: 20,
-    marginTop:'auto',
+    marginTop:20,
   },
   chooseImageText: {
     color: '#fff',
@@ -146,7 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:'auto',
+    marginTop:20,
   },
   imagePlaceholderText: {
     color: '#000',
