@@ -18,19 +18,6 @@ const Home = () => {
     </Link>
   </View>
 
-  <View style={styles.box}>
-  <Link href="/Historique" asChild>
-        <Button title="Historique des analyses " color='#006400'/>
-    </Link>
-  </View>
-
-  
-
-  <View style={styles.bottomBar}>
-               <TouchableOpacity>
-                <Icon name="user" size={25} color="black" />
-                </TouchableOpacity>
-         </View>
 </View>
 
 
@@ -66,7 +53,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       marginVertical: 10,
-      elevation: 5
+      elevation: 5,
     },
     link: {
       marginTop: 40,
