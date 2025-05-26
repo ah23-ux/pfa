@@ -1,20 +1,24 @@
 import { StyleSheet, Text, View, TouchableOpacity,Image,Button} from 'react-native'
 import React from 'react'
 import{Link} from 'expo-router'
-import Icon from 'react-native-vector-icons/Feather';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const Home = () => {
   return (
     <View style={styles.container}>
-  <Text style={styles.logo}>Planty</Text>
-  <View>
+    <View style={{ alignItems: 'center', marginBottom: 10 }}>
+      <FontAwesome5 name="seedling" size={40} color="pink"/>
+      <Text style={styles.logo}>Planty</Text>
+    </View>
+
+   <View>
     <Text style={styles.up}>Bonjour, user!</Text>
     <Text style={styles.up}>Prêt pour une nouvelle analyse de vos champs ?</Text>
   </View>
 
   <View style={styles.box}>
     <Link href="/NouvelleDetection" asChild>
-        <Button title="+ Nouvelle détection " color='#006400'/>
+        <Button title="+ Nouvelle détection " color='pink'/>
     </Link>
   </View>
 
@@ -33,19 +37,21 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       padding: 20,
-      backgroundColor: 'hsla(132, 94.90%, 30.80%, 0.75)',
+      backgroundColor:'#f5f5dc',
+      borderColor:'#006400',
+      borderWidth: 20,
     },
     logo: {
       fontWeight: 'bold',
       fontSize: 32,
       marginBottom: 40,
-      color: 'white'
+      color: '#006400'
     },
     up: {
       fontWeight: 'bold',
       fontSize: 20,
       textAlign: 'center',
-      color: 'white',
+      color: '#006400',
       marginBottom: 10,
     },
     box: {

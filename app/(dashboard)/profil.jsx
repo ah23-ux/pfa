@@ -63,7 +63,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: 'hsla(132, 94.90%, 30.80%, 0.75)',
+    backgroundColor: '#f5f5dc',
+    borderColor:'#006400',
+    borderWidth: 20,
   },
   up: {
     fontWeight: 'bold',

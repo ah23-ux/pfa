@@ -36,7 +36,8 @@ const Resultat = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'hsla(132, 94.90%, 30.80%, 0.75)',
+        backgroundColor: '#f5f5dc',
+        borderColor:'#006400',
         paddingVertical: 10,
         alignItems: 'center',
       justifyContent: 'center',

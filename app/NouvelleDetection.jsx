@@ -60,7 +60,7 @@ const NouvelleDetection = () => {
   }
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
+      
         <Text style={styles.logo}>Planty</Text>
         <Text style={styles.title}>Nouvelle Détection</Text>
         
@@ -76,7 +76,7 @@ const NouvelleDetection = () => {
           <Text style={styles.analyzeButtonText}>Analyser</Text>
         </TouchableOpacity>
         </Link>
-      </View>
+     
 
       
        
@@ -88,14 +88,16 @@ const NouvelleDetection = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'hsla(132, 94.90%, 30.80%, 0.75)',
+    backgroundColor: '#f5f5dc',
+    borderColor:'#006400',
     paddingVertical: 10,
     alignItems: 'center',
-  justifyContent: 'center',
+    justifyContent: 'center',
+    borderWidth: 20,
   },
-  card: {
+  /*card: {
     flex: 1,
-    backgroundColor: '#7bd198',
+    backgroundColor: '#f5f5dc', //'#7bd198'
     width: '90%',
     height: '90%',
     borderRadius: 20,
@@ -105,9 +107,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   alignItems: 'center',
   justifyContent: 'center',
-  },
+  },*/
   logo: {
-    color: '#fff',
+    color: '#006400',
     fontWeight: 'bold',
     fontSize: 30,
   },
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   analyzeButton: {
-    backgroundColor: '#f4b700',
+    backgroundColor: 'pink',
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 10,
