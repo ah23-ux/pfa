@@ -28,6 +28,7 @@ const DashboardLayout = ()=> {
             color={focused ? '#05822e': '#011909'}/>
 
            )}}/>
+           
         </Tabs>
     )
 }
