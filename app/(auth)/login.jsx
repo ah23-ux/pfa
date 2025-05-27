@@ -48,7 +48,12 @@ export default function Login() {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Se connecter</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.linkButton} onPress={() => router.push('/(auth)/register')}>
+         <Text style={styles.linkText}>S'inscrire</Text>
+       </TouchableOpacity>
+
     </ScrollView>
+    
   );
 }
 
@@ -92,6 +97,16 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  linkButton: {
+    marginTop: 15,
+  },
+  
+  linkText: {
+    color: '#006400',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
 });
 
