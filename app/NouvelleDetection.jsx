@@ -5,6 +5,11 @@ import * as ImagePicker from 'expo-image-picker'; //pour expo  //Ouvrir la galer
 import Icon from 'react-native-vector-icons/Feather';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import {Link} from 'expo-router'
+import { useRouter } from 'expo-router';
+import { Alert } from 'react-native';
+import { ActivityIndicator } from 'react-native';
+
+
 
 
 
@@ -12,6 +17,9 @@ import {Link} from 'expo-router'
 const NouvelleDetection = () => {
 
   const [imageUri, setImageUri] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  // Fonction pour choisir une image dans la galerie
     const choisirImage = async () => { //c'est une fct asynchrone (a chercher ce que ca veut dire )
         try {
              // Demander la permission d'accéder à la galerie
@@ -44,45 +52,86 @@ const NouvelleDetection = () => {
     console.warn('Erreur lors de la sélection de l’image :', err);
   }
 };
-         
-  let contenuImage;
-  if(imageUri){
-    contenuImage=(
-      <Image
-      source={{uri:imageUri}}
-      style={{width: '100%', height: '100%', borderRadius: 40}}
-        resizeMode="cover" />
-    );
-  } else{
-    contenuImage = (
-       <Text style={styles.imagePlaceholderText}>Miniature de l'image</Text>
-    );
-  }
-  return (
-    <View style={styles.container}>
-      
-        <Text style={styles.logo}>Planty</Text>
-        <Text style={styles.title}>Nouvelle Détection</Text>
-        
-        <TouchableOpacity style={styles.chooseImageButton} onPress={choisirImage}>
-          <Text style={styles.chooseImageText}>+ Choisir une image</Text>
-        </TouchableOpacity>
-        
-        <View style={styles.imagePlaceholder}>
-           {contenuImage}
-        </View>
-         <Link href="/loading" asChild>
-        <TouchableOpacity   style={styles.analyzeButton}>
-          <Text style={styles.analyzeButtonText}>Analyser</Text>
-        </TouchableOpacity>
-        </Link>
-     
 
-      
-       
-     
+ // Fonction pour envoyer l'image au serveur et naviguer vers la page résultat
+ const envoyerImage = async () => {
+  if (!imageUri) {
+    Alert.alert('Aucune image', 'Veuillez choisir une image avant de lancer l’analyse.');
+    return;
+  }
+  setLoading(true);
+  // Préparation du formData pour envoyer l'image en multipart/form-data
+  const formData = new FormData();
+  formData.append('image', {
+    uri: imageUri,
+    name: 'photo.jpg',
+    type: 'image/jpeg',
+  });
+  console.log('Sending image:', {
+    uri: imageUri,
+    name: 'photo.jpg',
+    type: 'image/jpeg',
+  });
+  
+  
+  try {
+    const response = await fetch('http://192.168.98.90:5000/predict', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    const json = await response.json();
+
+    if (json.status === 'success') {
+      // Navigation vers la page Resultat avec les paramètres
+      router.push({
+        pathname: '/Resultat',
+        params: {
+          prediction: json.prediction,
+          confidence: json.confidence.toString(), // passer en string car params URL
+        },
+      });
+    } else {
+      Alert.alert('Erreur', 'Le serveur n’a pas retourné de prédiction valide.');
+    }
+  } catch (error) {
+    console.error(error);
+    Alert.alert('Erreur réseau', 'Impossible de contacter le serveur.');
+  } finally {
+    setLoading(false);
+  }
+};
+         
+ 
+return (
+  <View style={styles.container}>
+    <Text style={styles.logo}>Planty</Text>
+    <Text style={styles.title}>Nouvelle Détection</Text>
+
+    <TouchableOpacity style={styles.chooseImageButton} onPress={choisirImage}>
+      <Text style={styles.chooseImageText}>+ Choisir une image</Text>
+    </TouchableOpacity>
+
+    <View style={styles.imagePlaceholder}>
+      {imageUri ? (
+        <Image source={{ uri: imageUri }} style={{ width: '100%', height: '100%', borderRadius: 40 }} resizeMode="cover" />
+      ) : (
+        <Text style={styles.imagePlaceholderText}>Miniature de l'image</Text>
+      )}
     </View>
-  );
+
+    <TouchableOpacity
+      style={[styles.analyzeButton, loading && { backgroundColor: 'gray' }]}
+      onPress={envoyerImage}
+      disabled={loading}
+    >
+      {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.analyzeButtonText}>Analyser</Text>}
+    </TouchableOpacity>
+  </View>
+);
 };
 
 const styles = StyleSheet.create({

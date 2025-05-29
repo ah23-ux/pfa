@@ -2,8 +2,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { Link } from 'expo-router';
+import { useLocalSearchParams  } from 'expo-router';
 
 const Resultat = () => {
+  const { prediction, confidence } = useLocalSearchParams ();
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -11,7 +13,14 @@ const Resultat = () => {
         <Text style={styles.title}>Résultat de l’analyse</Text>
 
         <View style={styles.resultBox}>
-          <Text style={styles.resultText}>Aucune maladie détectée{'\n'}Accuracy : 100%</Text>
+          <Text style={styles.resultText}>
+            {prediction
+              ? `Maladie détectée : ${prediction}\n`
+              : 'Aucune maladie détectée\n'}
+            {confidence
+              ? `Accuracy : ${(parseFloat(confidence) * 100).toFixed(2)} %`
+              : 'Accuracy : 100 %'}
+          </Text>
         </View>
 
         <TouchableOpacity style={styles.saveButton}>
