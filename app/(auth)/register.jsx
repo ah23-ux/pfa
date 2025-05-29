@@ -12,11 +12,12 @@ export default function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('');
   const router = useRouter();
 
   const handleRegister = async () => {
-    if (!prenom || !nom || !username || !email || !password) {
-      Alert.alert('Erreur', 'Tous les champs sont obligatoires');
+    if (!prenom || !nom || !username || !email || !password || !role) {
+      Alert.alert('Erreur', 'Tous les champs sont obligatoires, y compris le rôle');
       return;
     }
 
@@ -39,6 +40,7 @@ export default function Register() {
         nom,
         username,
         email,
+        role,
         createdAt: new Date(),
       });
 
@@ -58,6 +60,23 @@ export default function Register() {
       <TextInput style={styles.input} placeholder="Nom d'utilisateur" value={username} onChangeText={setUsername} />
       <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
       <TextInput style={styles.input} placeholder="Mot de passe" value={password} onChangeText={setPassword} secureTextEntry />
+
+      <Text style={styles.roleLabel}>Je suis :</Text>
+      <View style={styles.roleContainer}>
+        <TouchableOpacity
+          style={[styles.roleButton, role === 'agriculteur' && styles.selectedRole]}
+          onPress={() => setRole('agriculteur')}
+        >
+          <Text style={styles.roleText}>Agriculteur</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.roleButton, role === 'expert' && styles.selectedRole]}
+          onPress={() => setRole('expert')}
+        >
+          <Text style={styles.roleText}>Expert</Text>
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>S'inscrire</Text>
@@ -93,6 +112,38 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
   },
+  roleLabel: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginTop: 10,
+    marginBottom: 5,
+    alignSelf: 'flex-start',
+    color: '#006400',
+  },
+  roleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 15,
+  },
+  roleButton: {
+    flex: 1,
+    backgroundColor: '#d3f8e2',
+    padding: 12,
+    marginHorizontal: 5,
+    borderRadius: 10,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  selectedRole: {
+    backgroundColor: '#32CD32',
+    borderColor: '#006400',
+  },
+  roleText: {
+    color: '#006400',
+    fontWeight: 'bold',
+  },
   button: {
     width: '100%',
     backgroundColor: '#32CD32',
@@ -108,4 +159,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-

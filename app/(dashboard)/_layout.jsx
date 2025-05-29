@@ -3,7 +3,7 @@ import  {Ionicons} from '@expo/vector-icons'
 const DashboardLayout = ()=> {
     return (
         <Tabs screenOptions={{ headerShown:false, tabBarStyle:{
-            backgroundColor:  '#f5f5dc',
+            backgroundColor:  '#f0fff0',
             paddingTop:10,
             height:90,},
             tabBarActiveTintColor: '#333',

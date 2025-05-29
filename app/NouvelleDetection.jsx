@@ -1,113 +1,138 @@
-import React from 'react';
-import { useState } from 'react';              //Mémoriser une image ou un état dans ton composant
-import { Image } from 'react-native';     //Afficher une image sur l’écran
-import * as ImagePicker from 'expo-image-picker'; //pour expo  //Ouvrir la galerie et récupérer l’imag
-import Icon from 'react-native-vector-icons/Feather';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import {Link} from 'expo-router'
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { app } from '../firebase'; // Assure-toi que ce chemin est correct
+import { LinearGradient } from 'expo-linear-gradient';
+import { Link } from 'expo-router';
 
+const enregistrerAnalyse = async (imageURL, resultatTexte) => {
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const user = auth.currentUser;
 
+  if (!user) {
+    console.warn("Utilisateur non connecté");
+    return;
+  }
 
-
-const NouvelleDetection = () => {
-
-  const [imageUri, setImageUri] = useState(null);
-    const choisirImage = async () => { //c'est une fct asynchrone (a chercher ce que ca veut dire )
-        try {
-             // Demander la permission d'accéder à la galerie
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    //Si la permission est refusée, on arrête tout
-    if (status !== 'granted') {
-      console.log('Permission refusée');
-      return;
-    }
-
-    //Ouvrir la galerie pour sélectionner une image
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, // On ne veut que des images
-      quality: 1, // Qualité maximale
+  try {
+    await addDoc(collection(db, 'analyses'), {
+      userId: user.uid,
+      imageURL: imageURL,
+      resultat: resultatTexte,
+      date: new Date()
     });
-
-    //Si l'utilisateur annule la sélection
-    if (result.canceled) {
-      console.log('Sélection annulée');
-      return;
-    }
-
-    // Extraire et enregistrer l'URI de l'image sélectionnée
-    if (result.assets && result.assets.length > 0) {
-      const uri = result.assets[0].uri;
-      setImageUri(uri); // Mise à jour de l'état
-    }
-  } catch (err) {
-    console.warn('Erreur lors de la sélection de l’image :', err);
+    console.log('Analyse enregistrée avec succès.');
+  } catch (error) {
+    console.error('Erreur lors de l’enregistrement :', error);
   }
 };
-         
-  let contenuImage;
-  if(imageUri){
-    contenuImage=(
-      <Image
-      source={{uri:imageUri}}
-      style={{width: '100%', height: '100%', borderRadius: 40}}
-        resizeMode="cover" />
-    );
-  } else{
-    contenuImage = (
-       <Text style={styles.imagePlaceholderText}>Miniature de l'image</Text>
-    );
-  }
+
+const NouvelleDetection = () => {
+  const [imageUri, setImageUri] = useState(null);
+
+  const choisirImage = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission galerie refusée');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+      });
+
+      if (result.canceled) {
+        console.log('Sélection annulée');
+        return;
+      }
+
+      if (result.assets && result.assets.length > 0) {
+        setImageUri(result.assets[0].uri);
+      }
+    } catch (err) {
+      console.warn('Erreur sélection image :', err);
+    }
+  };
+
+  const prendrePhoto = async () => {
+    try {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission appareil photo refusée');
+        return;
+      }
+
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+      });
+
+      if (result.canceled) {
+        console.log('Prise de photo annulée');
+        return;
+      }
+
+      if (result.assets && result.assets.length > 0) {
+        setImageUri(result.assets[0].uri);
+      }
+    } catch (err) {
+      console.warn('Erreur prise photo :', err);
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      
-        <Text style={styles.logo}>Planty</Text>
-        <Text style={styles.title}>Nouvelle Détection</Text>
-        
-        <TouchableOpacity style={styles.chooseImageButton} onPress={choisirImage}>
-          <Text style={styles.chooseImageText}>+ Choisir une image</Text>
-        </TouchableOpacity>
-        
-        <View style={styles.imagePlaceholder}>
-           {contenuImage}
-        </View>
-         <Link href="/loading" asChild>
-        <TouchableOpacity   style={styles.analyzeButton}>
+    <LinearGradient colors={['#e8f5e9', '#d0f0c0']} style={styles.container}>
+      <Text style={styles.logo}>Planty</Text>
+      <Text style={styles.title}>Nouvelle Détection</Text>
+
+      <TouchableOpacity style={styles.chooseImageButton} onPress={choisirImage}>
+        <Text style={styles.chooseImageText}>+ Choisir une image</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.chooseImageButton} onPress={prendrePhoto}>
+        <Text style={styles.chooseImageText}>📷 Prendre une photo</Text>
+      </TouchableOpacity>
+
+      <View style={styles.imagePlaceholder}>
+        {imageUri ? (
+          <Image
+            source={{ uri: imageUri }}
+            style={{ width: '100%', height: '100%', borderRadius: 40 }}
+            resizeMode="cover"
+          />
+        ) : (
+          <Text style={styles.imagePlaceholderText}>Miniature de l'image</Text>
+        )}
+      </View>
+
+      <Link href="/loading" asChild>
+        <TouchableOpacity style={styles.analyzeButton}>
           <Text style={styles.analyzeButtonText}>Analyser</Text>
         </TouchableOpacity>
-        </Link>
-     
-
-      
-       
-     
-    </View>
+      </Link>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5dc',
-    borderColor:'#006400',
-    paddingVertical: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 20,
-  },
-  /*card: {
-    flex: 1,
-    backgroundColor: '#f5f5dc', //'#7bd198'
-    width: '90%',
-    height: '90%',
+    padding: 30,
+    backgroundColor: '#e8f5e9',
     borderRadius: 20,
-    alignItems: 'center',
-    paddingVertical: 30,
-    gap: 20,
-    marginTop: 20,
-  alignItems: 'center',
-  justifyContent: 'center',
-  },*/
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
   logo: {
     color: '#006400',
     fontWeight: 'bold',
@@ -118,19 +143,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontStyle: 'italic',
     color: '#000',
-    marginTop:20,
+    marginTop: 20,
   },
   chooseImageButton: {
     backgroundColor: '#006400',
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 5,
-    marginTop:20,
+    marginTop: 20,
   },
   chooseImageText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize:20,
+    fontSize: 18,
   },
   imagePlaceholder: {
     backgroundColor: '#f5f5dc',
@@ -139,7 +164,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:20,
+    marginTop: 20,
   },
   imagePlaceholderText: {
     color: '#000',
@@ -150,25 +175,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 10,
+    marginTop: 20,
   },
   analyzeButtonText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 20,
-  },
-  bottomBar: {
-    backgroundColor: '#f5f5dc',
-    width: '90%',
-    borderRadius: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: '',
-    paddingVertical: 10,
-    marginBottom: 20,
-    marginTop: 'auto', 
-  },
-  icon: {
-    fontSize: 24,
   },
 });
 

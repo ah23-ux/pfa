@@ -5,6 +5,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 const Home = () => {
   const router = useRouter();
@@ -52,7 +54,8 @@ const Home = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={['#e8f5e9', '#d0f0c0']} style={styles.container}
+>
       <View style={{ alignItems: 'center', marginBottom: 10 }}>
         <FontAwesome5 name="seedling" size={40} color="pink" />
         <Text style={styles.logo}>Planty</Text>
@@ -60,7 +63,7 @@ const Home = () => {
 
       <View>
         <Text style={styles.up}>Bonjour, {username} !</Text>
-        <Text style={styles.up}>Prêt pour une nouvelle analyse de vos champs ?</Text>
+        <Text style={styles.up}>Prêt(e) pour une nouvelle analyse de vos champs ?</Text>
       </View>
 
       <View style={styles.box}>
@@ -69,10 +72,10 @@ const Home = () => {
         </Link>
       </View>
 
-      <View style={{ marginTop: 30 }}>
+      <View style={styles.box}>
         <Button title="Se déconnecter" color="#006400" onPress={handleLogout} />
       </View>
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -83,10 +86,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#f5f5dc',
-    borderColor: '#006400',
-    borderWidth: 20,
+    padding: 30,
+    backgroundColor: '#e8f5e9', // un vert très pâle
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
   },
   logo: {
     fontWeight: 'bold',
@@ -108,3 +115,4 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+
