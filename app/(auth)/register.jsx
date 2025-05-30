@@ -13,11 +13,18 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
+  const [phone, setPhone] = useState('');
+  const [plantesExpert, setPlantesExpert] = useState([]);
+  const plantesDisponibles = ['Betterave', 'Blé', 'Tomate']; // à adapter
   const router = useRouter();
 
   const handleRegister = async () => {
-    if (!prenom || !nom || !username || !email || !password || !role) {
+    if (!prenom || !nom || !username || !email || !password || !role || !phone) {
       Alert.alert('Erreur', 'Tous les champs sont obligatoires, y compris le rôle');
+      return;
+    }
+    if (role === 'expert' && plantesExpert.length === 0) {
+      Alert.alert('Erreur', 'Veuillez sélectionner au moins une plante si vous êtes expert');
       return;
     }
 
@@ -40,10 +47,21 @@ export default function Register() {
         nom,
         username,
         email,
+        phone,
         role,
         createdAt: new Date(),
       });
-
+      if (role === 'expert') {
+        await setDoc(doc(db, 'experts', user.uid), {
+          uid: user.uid,
+          nom,
+          prenom,
+          email,
+          phone,
+          plantes: plantesExpert,  // tableau des plantes suivies
+          createdAt: new Date(),
+        });
+      }
       router.replace('/(dashboard)');
     } catch (error) {
       Alert.alert('Erreur', error.message);
@@ -59,6 +77,7 @@ export default function Register() {
       <TextInput style={styles.input} placeholder="Nom" value={nom} onChangeText={setNom} />
       <TextInput style={styles.input} placeholder="Nom d'utilisateur" value={username} onChangeText={setUsername} />
       <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+      <TextInput style={styles.input} placeholder="Téléphone" value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
       <TextInput style={styles.input} placeholder="Mot de passe" value={password} onChangeText={setPassword} secureTextEntry />
 
       <Text style={styles.roleLabel}>Je suis :</Text>
@@ -77,6 +96,31 @@ export default function Register() {
           <Text style={styles.roleText}>Expert</Text>
         </TouchableOpacity>
       </View>
+      {role === 'expert' && (
+        <>
+          <Text style={styles.roleLabel}>Plantes suivies :</Text>
+          {plantesDisponibles.map(plante => (
+            <TouchableOpacity
+              key={plante}
+              onPress={() => {
+                if (plantesExpert.includes(plante)) {
+                  setPlantesExpert(plantesExpert.filter(p => p !== plante));
+                } else {
+                  setPlantesExpert([...plantesExpert, plante]);
+                }
+              }}
+              style={{
+                backgroundColor: plantesExpert.includes(plante) ? '#c0ffc0' : '#eee',
+                padding: 8,
+                borderRadius: 5,
+                marginVertical: 4,
+              }}
+            >
+              <Text>{plantesExpert.includes(plante) ? '✓ ' : ''}{plante}</Text>
+            </TouchableOpacity>
+          ))}
+        </>
+      )}
 
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>S'inscrire</Text>

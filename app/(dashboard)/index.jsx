@@ -71,7 +71,12 @@ const Home = () => {
           <Button title="+ Nouvelle détection " color="pink" />
         </Link>
       </View>
-
+      <View style={styles.box}>
+        <Link href="/experts" asChild>
+          <Button title="Liste des experts en betterave" color="#006400" />
+        </Link>
+      </View>
+       
       <View style={styles.box}>
         <Button title="Se déconnecter" color="#006400" onPress={handleLogout} />
       </View>
@@ -114,5 +119,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     elevation: 5,
   },
+ 
+  
 });
 

@@ -113,7 +113,7 @@ const NouvelleDetection = () => {
   });
   
   try {
-    const response = await fetch('http://192.168.1.11:5000/predict', {
+    const response = await fetch('http://192.168.98.90:5000/predict', {
       method: 'POST',
       body: formData,
       headers: {
