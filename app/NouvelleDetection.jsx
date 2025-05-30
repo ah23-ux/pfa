@@ -5,7 +5,13 @@ import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebase'; // Assure-toi que ce chemin est correct
 import { LinearGradient } from 'expo-linear-gradient';
-import { Link } from 'expo-router';
+import { Image } from 'react-native';     //Afficher une image sur l’écran
+import { Alert } from 'react-native';
+import { ActivityIndicator } from 'react-native';
+import { useRouter } from 'expo-router';
+
+
+
 
 const enregistrerAnalyse = async (imageURL, resultatTexte) => {
   const db = getFirestore(app);
@@ -31,7 +37,9 @@ const enregistrerAnalyse = async (imageURL, resultatTexte) => {
 };
 
 const NouvelleDetection = () => {
+  const router = useRouter();
   const [imageUri, setImageUri] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const choisirImage = async () => {
     try {
@@ -85,38 +93,90 @@ const NouvelleDetection = () => {
     }
   };
 
-  return (
-    <LinearGradient colors={['#e8f5e9', '#d0f0c0']} style={styles.container}>
-      <Text style={styles.logo}>Planty</Text>
-      <Text style={styles.title}>Nouvelle Détection</Text>
+ // Fonction pour envoyer l'image au serveur et naviguer vers la page résultat
+ const envoyerImage = async () => {
+  if (!imageUri) {
+    Alert.alert('Aucune image', 'Veuillez choisir une image avant de lancer l’analyse.');
+    return;
+  }
+  setLoading(true);
+  // Préparation du formData pour envoyer l'image en multipart/form-data
+  const formData = new FormData();
+  formData.append('image', {
+    uri: imageUri,
+    name: 'photo.jpg',
+    type: 'image/jpeg',
+  });
+  console.log('Sending image:', {
+    uri: imageUri,
+    name: 'photo.jpg',
+    type: 'image/jpeg',
+  });
+  
+  try {
+    const response = await fetch('http://192.168.1.11:5000/predict', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
 
-      <TouchableOpacity style={styles.chooseImageButton} onPress={choisirImage}>
-        <Text style={styles.chooseImageText}>+ Choisir une image</Text>
-      </TouchableOpacity>
+    const json = await response.json();
 
-      <TouchableOpacity style={styles.chooseImageButton} onPress={prendrePhoto}>
-        <Text style={styles.chooseImageText}>📷 Prendre une photo</Text>
-      </TouchableOpacity>
+    if (json.status === 'success') {
+      await enregistrerAnalyse(imageUri, json.prediction); // 🔥 Enregistrement dans Firestore
+      // Navigation vers la page Resultat avec les paramètres
+      router.push({
+        pathname: '/Resultat',
+        params: {
+          prediction: json.prediction,
+          confidence: json.confidence.toString(), // passer en string car params URL
+        },
+      });
+    } else {
+      Alert.alert('Erreur', 'Le serveur n’a pas retourné de prédiction valide.');
+    }
+  } catch (error) {
+    console.error(error);
+    Alert.alert('Erreur réseau', 'Impossible de contacter le serveur.');
+  } finally {
+    setLoading(false);
+  }
+};
+         
+ 
+return (
+  <LinearGradient colors={['#e8f5e9', '#d0f0c0']} style={styles.container}>
+    <Text style={styles.logo}>Planty</Text>
+    <Text style={styles.title}>Nouvelle Détection</Text>
 
-      <View style={styles.imagePlaceholder}>
-        {imageUri ? (
-          <Image
-            source={{ uri: imageUri }}
-            style={{ width: '100%', height: '100%', borderRadius: 40 }}
-            resizeMode="cover"
-          />
-        ) : (
-          <Text style={styles.imagePlaceholderText}>Miniature de l'image</Text>
-        )}
-      </View>
+    <TouchableOpacity style={styles.chooseImageButton} onPress={choisirImage}>
+      <Text style={styles.chooseImageText}>+ Choisir une image</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.chooseImageButton} onPress={prendrePhoto}>
+      <Text style={styles.chooseImageText}>📷 Prendre une photo</Text>
+    </TouchableOpacity>
 
-      <Link href="/loading" asChild>
-        <TouchableOpacity style={styles.analyzeButton}>
-          <Text style={styles.analyzeButtonText}>Analyser</Text>
-        </TouchableOpacity>
-      </Link>
+
+    <View style={styles.imagePlaceholder}>
+      {imageUri ? (
+        <Image source={{ uri: imageUri }} style={{ width: '100%', height: '100%', borderRadius: 40 }} resizeMode="cover" />
+      ) : (
+        <Text style={styles.imagePlaceholderText}>Miniature de l'image</Text>
+      )}
+    </View>
+
+    <TouchableOpacity
+      style={[styles.analyzeButton, loading && { backgroundColor: 'gray' }]}
+      onPress={envoyerImage}
+      disabled={loading}
+    >
+      {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.analyzeButtonText}>Analyser</Text>}
+    </TouchableOpacity>
     </LinearGradient>
-  );
+);
+
 };
 
 const styles = StyleSheet.create({

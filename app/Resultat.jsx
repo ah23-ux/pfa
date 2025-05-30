@@ -1,12 +1,13 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
 import { Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { useLocalSearchParams  } from 'expo-router';
 
 const Resultat = () => {
+  const { prediction, confidence } = useLocalSearchParams ();
   return (
     <LinearGradient colors={['#e8f5e9', '#d0f0c0']} style={styles.container}>
       <View style={styles.card}>
@@ -18,7 +19,17 @@ const Resultat = () => {
         <Text style={styles.title}>Résultat de l’analyse</Text>
 
         <View style={styles.resultBox}>
-          <Text style={styles.resultText}>🌿 Aucune maladie détectée{'\n'}✅ Précision : 100%</Text>
+
+
+          <Text style={styles.resultText}>
+            {prediction
+              ? `Maladie détectée : ${prediction}\n`
+              : 'Aucune maladie détectée\n'}
+            {confidence
+              ? `Accuracy : ${(parseFloat(confidence) * 100).toFixed(2)} %`
+              : 'Accuracy : 100 %'}
+          </Text>
+
         </View>
 
         <TouchableOpacity style={styles.button}>

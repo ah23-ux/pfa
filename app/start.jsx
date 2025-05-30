@@ -12,7 +12,10 @@ export default function Index() {
     const unsubscribe = onAuthStateChanged(auth, user => {
       if (user) {
         // Utilisateur connecté : redirige vers Home
-        router.replace('/(dashboard)/home');
+
+
+        router.replace('/(dashboard)');
+
       } else {
         // Pas connecté : redirige vers Login
         router.replace('/auth/login');
