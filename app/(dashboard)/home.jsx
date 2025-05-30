@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, ActivityIndicator } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { signOut } from 'firebase/auth';
 import { auth, db } from '../../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -36,14 +35,7 @@ const Home = () => {
     fetchUser();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      router.replace('/(auth)/login');
-    } catch (error) {
-      console.error('Erreur lors de la déconnexion :', error.message);
-    }
-  };
+  
 
   if (loading) {
     return (
@@ -72,9 +64,7 @@ const Home = () => {
         </Link>
       </View>
 
-      <View style={styles.box}>
-        <Button title="Se déconnecter" color="#006400" onPress={handleLogout} />
-      </View>
+     
     </LinearGradient>
   );
 };

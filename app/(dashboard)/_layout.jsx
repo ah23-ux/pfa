@@ -9,7 +9,7 @@ const DashboardLayout = ()=> {
             tabBarActiveTintColor: '#333',
             tabBarInactiveTintColor:'#333',
         }}>
-           <Tabs.Screen name="index"  options={{title:'Home', tabBarIcon:({focused})=>(
+           <Tabs.Screen name="home"  options={{title:'Home', tabBarIcon:({focused})=>(
             <Ionicons
             size={24}
             name={focused ? 'home': 'home-outline'} 
