@@ -5,11 +5,10 @@ import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebase'; // Assure-toi que ce chemin est correct
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image } from 'react-native';     //Afficher une image sur l’écran
 import { Alert } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-
+import { serverTimestamp } from 'firebase/firestore';
 
 
 
@@ -28,7 +27,7 @@ const enregistrerAnalyse = async (imageURL, resultatTexte) => {
       userId: user.uid,
       imageURL: imageURL,
       resultat: resultatTexte,
-      date: new Date()
+      date: serverTimestamp()
     });
     console.log('Analyse enregistrée avec succès.');
   } catch (error) {
