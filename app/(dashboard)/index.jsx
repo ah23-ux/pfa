@@ -59,7 +59,7 @@ const Home = () => {
       </View>
 
       <View style={styles.box}>
-        <Link href="/NouvelleDetection" asChild>
+        <Link href="/categorie" asChild>
           <Button title="+ Nouvelle détection " color="pink" />
         </Link>
       </View>
