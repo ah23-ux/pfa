@@ -73,7 +73,7 @@ const Home = () => {
       </View>
       <View style={styles.box}>
         <Link href="/experts" asChild>
-          <Button title="Liste des experts en betterave" color="#006400" />
+          <Button title="Liste des experts" color="#006400" />
         </Link>
       </View>
        
