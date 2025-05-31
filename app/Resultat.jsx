@@ -22,14 +22,15 @@ const Resultat = () => {
         <View style={styles.resultBox}>
 
 
-          <Text style={styles.resultText}>
-            {prediction
-              ? `Maladie détectée : ${prediction}\n`
-              : 'Aucune maladie détectée\n'}
-            {confidence
-              ? `Accuracy : ${(parseFloat(confidence) * 100).toFixed(2)} %`
-              : 'Accuracy : 100 %'}
-          </Text>
+        <Text style={styles.resultText}>
+  {prediction && prediction.toLowerCase() !== 'healthy' 
+    ? `Maladie détectée : ${prediction.charAt(0).toUpperCase() + prediction.slice(1)}`
+    : 'Aucune maladie détectée'}
+  {'\n'}
+  {confidence
+    ? `Confiance : ${(parseFloat(confidence) * 100).toFixed(2)} %`
+    : 'Confiance : 100 %'}
+</Text>
 
         </View>
 
