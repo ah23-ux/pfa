@@ -5,8 +5,9 @@ import { Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useLocalSearchParams  } from 'expo-router';
-
+import { useRouter } from 'expo-router';
 const Resultat = () => {
+  const router = useRouter();
   const { prediction, confidence } = useLocalSearchParams ();
   return (
     <LinearGradient colors={['#e8f5e9', '#d0f0c0']} style={styles.container}>
@@ -21,19 +22,22 @@ const Resultat = () => {
         <View style={styles.resultBox}>
 
 
-          <Text style={styles.resultText}>
-            {prediction
-              ? `Maladie détectée : ${prediction}\n`
-              : 'Aucune maladie détectée\n'}
-            {confidence
-              ? `Accuracy : ${(parseFloat(confidence) * 100).toFixed(2)} %`
-              : 'Accuracy : 100 %'}
-          </Text>
+        <Text style={styles.resultText}>
+  {prediction && prediction.toLowerCase() !== 'healthy' 
+    ? `Maladie détectée : ${prediction.charAt(0).toUpperCase() + prediction.slice(1)}`
+    : 'Aucune maladie détectée'}
+  {'\n'}
+  {confidence
+    ? `Confiance : ${(parseFloat(confidence) * 100).toFixed(2)} %`
+    : 'Confiance : 100 %'}
+</Text>
 
         </View>
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Enregistrer l’analyse</Text>
+        <TouchableOpacity style={styles.button}
+        onPress={() => router.push('/(dashboard)/Historique')}
+      >
+        <Text style={styles.buttonText}>Voir mon historique</Text>
         </TouchableOpacity>
 
         <Link href="/NouvelleDetection" asChild>
@@ -42,8 +46,10 @@ const Resultat = () => {
           </TouchableOpacity>
         </Link>
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>🌱 Conseils</Text>
+        <TouchableOpacity style={styles.button}
+        onPress={() => router.push('/experts')}
+    >
+      <Text style={{ color: 'white', fontWeight: 'bold' }}>Voir la liste des experts</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>

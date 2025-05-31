@@ -4,7 +4,10 @@ import { Link, useRouter } from 'expo-router';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { auth, db } from '../../firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+
+
 
 
 const Home = () => {
@@ -46,8 +49,17 @@ const Home = () => {
   }
 
   return (
-    <LinearGradient colors={['#e8f5e9', '#d0f0c0']} style={styles.container}
->
+    <ImageBackground
+    source={require('../../assets/homepage.jpg')} 
+    style={styles.background}
+    resizeMode="cover"
+  >
+    <LinearGradient
+    colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.5)']}
+    style={StyleSheet.absoluteFill}
+  />
+   
+ 
       <View style={{ alignItems: 'center', marginBottom: 10 }}>
         <FontAwesome5 name="seedling" size={40} color="pink" />
         <Text style={styles.logo}>Planty</Text>
@@ -60,12 +72,12 @@ const Home = () => {
 
       <View style={styles.box}>
         <Link href="/categorie" asChild>
-          <Button title="+ Nouvelle détection " color="pink" />
+          <Button title="+ Nouvelle détection " color="green" />
         </Link>
       </View>
 
      
-    </LinearGradient>
+      </ImageBackground>
   );
 };
 
@@ -85,24 +97,39 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 5,
   },
-  logo: {
-    fontWeight: 'bold',
-    fontSize: 32,
-    marginBottom: 40,
-    color: '#006400',
-  },
   up: {
     fontWeight: 'bold',
     fontSize: 20,
     textAlign: 'center',
-    color: '#006400',
+    color: 'white',
     marginBottom: 10,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
+  logo: {
+    fontWeight: 'bold',
+    fontSize: 32,
+    marginBottom: 40,
+    color: 'white',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  
+  
   box: {
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
     elevation: 5,
   },
+  background: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 30,
+  },
+  
 });
 
